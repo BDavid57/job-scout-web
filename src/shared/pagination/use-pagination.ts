@@ -1,34 +1,32 @@
-import {useEffect, useState} from 'react';
+import { useEffect, useMemo, useState } from "react";
 
-export type PaginatedData<T> = {
-  data: T[];
-  nextPageHandler: () => void;
-  previousPageHandler: () => void;
-
-  lastPage: number;
-  currentPage: number;
-}
-
-export function usePagination<T>(data: T[], itemsPerPage: number = 10): PaginatedData<T> {
+export function usePagination<T>(data: T[], itemsPerPage: number = 10) {
   const [currentPage, setCurrentPage] = useState(1);
+
   const lastPage = Math.max(1, Math.ceil(data.length / itemsPerPage));
 
-  const currentItems = (): T[] => {
+  const currentItems = useMemo(() => {
     const begin = (currentPage - 1) * itemsPerPage;
     const end = begin + itemsPerPage;
-    
+
     return data.slice(begin, end);
-  };
+  }, [data, currentPage, itemsPerPage]);
 
   useEffect(() => {
     setCurrentPage(1);
   }, [data]);
 
   const nextPageHandler = () =>
-    setCurrentPage((currentPage) => Math.min(currentPage + 1, lastPage));
+    setCurrentPage((page) => Math.min(page + 1, lastPage));
 
   const previousPageHandler = () =>
-    setCurrentPage((currentPage) => Math.max(currentPage - 1, 1));
+    setCurrentPage((page) => Math.max(page - 1, 1));
 
-  return { data: currentItems(), nextPageHandler, previousPageHandler, currentPage, lastPage};
+  return {
+    data: currentItems,
+    nextPageHandler,
+    previousPageHandler,
+    currentPage,
+    lastPage,
+  };
 }

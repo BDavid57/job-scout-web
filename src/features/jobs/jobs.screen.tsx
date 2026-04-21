@@ -1,7 +1,6 @@
 import { JobsTable } from "./table";
-import { ContainedScreen, PaginationButtons, usePagination } from "../../shared";
+import { PaginationButtons, usePagination } from "../../shared";
 import { useEmptyStateContent, useFetchJobs, useLoadingStateContent } from "./hooks";
-import { Card, CardContent } from "../../components/ui/card";
 
 export const JobsScreen = () => {
   const { data: jobs, isFetching, isFetched} = useFetchJobs();
@@ -16,24 +15,20 @@ export const JobsScreen = () => {
   const loadingStateContent = useLoadingStateContent(isLoadingFirstTime);
 
   return (
-    <ContainedScreen>
-      <Card>
-        <CardContent>
-          {emptyStateContent}
-          {loadingStateContent}
+    <>
+      {emptyStateContent}
+      {loadingStateContent}
 
-          {isLoadedAndHasData && (
-            <>
-              <JobsTable jobsList={jobsList} />
-              <PaginationButtons 
-                previousPageHandler={previousPageHandler} 
-                nextPageHandler={nextPageHandler}
-                currentPage={currentPage}
-                lastPage={lastPage} />
-            </>
-          )}
-        </CardContent>
-      </Card>
-    </ContainedScreen>
+      {isLoadedAndHasData && (
+        <>
+          <JobsTable jobsList={jobsList} />
+          <PaginationButtons 
+            previousPageHandler={previousPageHandler} 
+            nextPageHandler={nextPageHandler}
+            currentPage={currentPage}
+            lastPage={lastPage} />
+        </>
+      )}
+    </>
   );
 }
