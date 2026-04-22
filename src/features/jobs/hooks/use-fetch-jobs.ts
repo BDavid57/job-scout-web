@@ -12,13 +12,15 @@ export const useFetchJobs = (
   const [isFetched, setIsFetched] = useState(false);
 
   const fetchData = useCallback(async () => {
+    const BASE_URL = import.meta.env.JOBDATA_BASE_URL;
+
     try {
       setIsFetching(true);
       setIsFetched(false);
       setError(null);
 
       const res = await fetch(
-        `http://localhost:3000/jobs?has_remote=true&language=en&region_id=${region}&title=${title}&max_age=${published}`
+        `${BASE_URL}&region_id=${region}&title=${title}&max_age=${published}`
       );
 
       const data = await res.json();
