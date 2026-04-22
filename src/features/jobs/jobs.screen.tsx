@@ -12,11 +12,9 @@ export const JobsScreen = () => {
   const { data: jobs, isFetching, isFetched, fetchData} = useFetchJobs(region, title, published);
   const { data: jobsList, nextPageHandler, previousPageHandler, currentPage, lastPage } = usePagination(jobs, 10)
 
-  const listData = jobsList ?? []
-
   const isLoadingFirstTime = !isFetched && isFetching;
-  const isLoadedAndHasData = isFetched && listData.length > 0;
-  const isLoadedAndHasNoData = !isFetching && listData.length === 0;
+  const isLoadedAndHasData = isFetched && jobsList.length > 0;
+  const isLoadedAndHasNoData = isFetched && jobsList.length === 0;
 
   const emptyStateContent = useEmptyStateContent(isLoadedAndHasNoData);
   const loadingStateContent = useLoadingStateContent(isLoadingFirstTime);
@@ -38,7 +36,7 @@ export const JobsScreen = () => {
 
         {isLoadedAndHasData && (
           <>
-            <JobsTable jobsList={listData} />
+            <JobsTable jobsList={jobsList} />
             <PaginationButtons 
               previousPageHandler={previousPageHandler} 
               nextPageHandler={nextPageHandler}

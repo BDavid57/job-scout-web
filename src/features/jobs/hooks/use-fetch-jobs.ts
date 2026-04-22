@@ -1,4 +1,4 @@
-import { useEffect, useState, useCallback } from "react";
+import { useEffect, useState } from "react";
 import type { Job } from "../types";
 
 export const useFetchJobs = (
@@ -6,47 +6,65 @@ export const useFetchJobs = (
   title: string,
   published: string
 ) => {
+  const cacheKey = `jobs_${region}_${title}_${published}`;
+  const BASE_URL = import.meta.env.VITE_JOBDATA_BASE_URL;
+
   const [list, setList] = useState<Job[]>([]);
   const [error, setError] = useState<unknown>(null);
   const [isFetching, setIsFetching] = useState(false);
   const [isFetched, setIsFetched] = useState(false);
 
-  const listData = list ?? []
+  useEffect(() => {
+    try {
+      const saved = localStorage.getItem(cacheKey);
 
-  const fetchData = useCallback(async () => {
-    const BASE_URL = import.meta.env.VITE_JOBDATA_BASE_URL;
+      if (saved) {
+        setList(JSON.parse(saved));
+        setIsFetched(true);
+      } else {
+        setList([]);
+        setIsFetched(false);
+      }
+    } catch {
+      setList([]);
+      setIsFetched(false);
+    }
+  }, [cacheKey]);
 
+  const fetchData = async () => {
     try {
       setIsFetching(true);
-      setIsFetched(false);
       setError(null);
 
-      const url = new URL("/jobs", BASE_URL);
-      url.searchParams.set("has_remote", "true");
-      url.searchParams.set("language", "en");
-      url.searchParams.set("region_id", String(region));
-      url.searchParams.set("title", title);
-      url.searchParams.set("max_age", published);
+      const url = `${BASE_URL}&region_id=${region}&title=${encodeURIComponent(
+        title
+      )}&max_age=${published}`;
 
       const res = await fetch(url.toString());
 
+      if (!res.ok) {
+        throw new Error(`HTTP error: ${res.status}`);
+      }
+
       const data = await res.json();
 
-      setList(data.results);
+      setList(data.results || []);
       setIsFetched(true);
+
+      localStorage.setItem(cacheKey, JSON.stringify(data.results || []));
     } catch (err) {
       setError(err);
       setIsFetched(true);
     } finally {
       setIsFetching(false);
     }
-  }, [region, title, published]);
+  };
 
-  useEffect(() => {
-    if (listData.length > 0) {
-      localStorage.setItem("list", JSON.stringify(listData));
-    }
-  }, [listData]);
-
-  return { data: listData, error, isFetching, isFetched, fetchData };
+  return {
+    data: list,
+    error,
+    isFetching,
+    isFetched,
+    fetchData,
+  };
 };
