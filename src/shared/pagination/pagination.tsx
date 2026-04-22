@@ -1,6 +1,7 @@
 import {ChevronLeft, ChevronRight} from "lucide-react";
 
 import { Button } from "../../components/ui/button";
+import { memo } from "react";
 
 type Props = {
   previousPageHandler: () => void,
@@ -9,8 +10,9 @@ type Props = {
   lastPage: number | undefined
 }
 
-export function PaginationButtons(props: Props) {
+export const PaginationButtons = memo((props: Props) => {
   const {previousPageHandler, nextPageHandler, currentPage, lastPage} = props;
+  console.log('re-rendering pagination')
 
   return(
     <div className="flex justify-end items-center m-2 p-2 space-x-2">
@@ -27,4 +29,4 @@ export function PaginationButtons(props: Props) {
     </Button>
   </div>
   )
-}
+})

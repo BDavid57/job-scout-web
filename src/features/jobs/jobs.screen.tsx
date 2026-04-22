@@ -1,10 +1,13 @@
 import { JobsTable } from "./table";
 import { PaginationButtons, usePagination } from "../../shared";
 import { useEmptyStateContent, useFetchJobs, useLoadingStateContent } from "./hooks";
+import { useState } from "react";
+import { InputDashboard } from "./input-dashboard";
 
 export const JobsScreen = () => {
-  const { data: jobs, isFetching, isFetched} = useFetchJobs();
+  const [region, setRegion] = useState(3);
 
+  const { data: jobs, isFetching, isFetched} = useFetchJobs();
   const { data: jobsList, nextPageHandler, previousPageHandler, currentPage, lastPage } = usePagination(jobs, 10)
 
   const isLoadingFirstTime = !isFetched && isFetching;
@@ -21,6 +24,7 @@ export const JobsScreen = () => {
 
       {isLoadedAndHasData && (
         <>
+          <InputDashboard region={region} selectRegion={setRegion} />
           <JobsTable jobsList={jobsList} />
           <PaginationButtons 
             previousPageHandler={previousPageHandler} 

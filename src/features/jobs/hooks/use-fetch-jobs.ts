@@ -21,7 +21,7 @@ export const useFetchJobs = () => {
         const data = await res.json();
         setIsFetching(false)
 
-        setList(data.results); // take first 10 just as example
+        setList(data.results);
         setIsFetched(true)
       } catch (err) {
         setError(error)

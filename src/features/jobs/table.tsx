@@ -4,12 +4,13 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from ".
 import { Button } from "../../components/ui/button.tsx";
 import type { Job } from "./types";
 import { truncateString } from "../../utils";
+import { memo } from "react";
 
 type Props = {
   jobsList: Job[];
 }
 
-export const JobsTable = (props: Props) => {
+export const JobsTable = memo((props: Props) => {
   const { jobsList } = props;
 
   return (
@@ -19,7 +20,7 @@ export const JobsTable = (props: Props) => {
           <TableHead>Title</TableHead>
           <TableHead className={'max-md:hidden'}>Company</TableHead>
           <TableHead>Location</TableHead>
-          {/* {<TableHead>Language</TableHead>} */}
+          {<TableHead>Job Type</TableHead>}
           {<TableHead className={'max-lg:hidden'}>Max Salary</TableHead>}
           <TableHead className={'max-lg:hidden'}>Published</TableHead>
           <TableHead className="max-w-[150px]"></TableHead>
@@ -31,7 +32,7 @@ export const JobsTable = (props: Props) => {
             <TableCell>{truncateString(item.title, 35)}</TableCell>
             <TableCell className={'max-md:hidden'}>{item.company.name}</TableCell>
             <TableCell>{truncateString(item.location, 30)}</TableCell>
-            {/* <TableCell></TableCell> */}
+            <TableCell>{item.types[0].name}</TableCell>
             <TableCell className={'max-lg:hidden text-muted-foreground'}>{item.salary_max}</TableCell>
             <TableCell className={'max-lg:hidden text-muted-foreground'}>{moment(item.published).format('ll')}</TableCell>
             <TableCell className="truncate text-right">
@@ -51,4 +52,4 @@ export const JobsTable = (props: Props) => {
       </TableBody>
     </Table>
   )
-}
+})
