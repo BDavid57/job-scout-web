@@ -11,17 +11,24 @@ export const useFetchJobs = (
   const [isFetching, setIsFetching] = useState(false);
   const [isFetched, setIsFetched] = useState(false);
 
+  const listData = list ?? []
+
   const fetchData = useCallback(async () => {
-    const BASE_URL = import.meta.env.JOBDATA_BASE_URL;
+    const BASE_URL = import.meta.env.VITE_JOBDATA_BASE_URL;
 
     try {
       setIsFetching(true);
       setIsFetched(false);
       setError(null);
 
-      const res = await fetch(
-        `${BASE_URL}&region_id=${region}&title=${title}&max_age=${published}`
-      );
+      const url = new URL("/jobs", BASE_URL);
+      url.searchParams.set("has_remote", "true");
+      url.searchParams.set("language", "en");
+      url.searchParams.set("region_id", String(region));
+      url.searchParams.set("title", title);
+      url.searchParams.set("max_age", published);
+
+      const res = await fetch(url.toString());
 
       const data = await res.json();
 
@@ -36,14 +43,10 @@ export const useFetchJobs = (
   }, [region, title, published]);
 
   useEffect(() => {
-    fetchData();
-  }, [fetchData]);
-
-  useEffect(() => {
-    if (list.length > 0) {
-      localStorage.setItem("list", JSON.stringify(list));
+    if (listData.length > 0) {
+      localStorage.setItem("list", JSON.stringify(listData));
     }
-  }, [list]);
+  }, [listData]);
 
-  return { data: list, error, isFetching, isFetched, fetchData };
+  return { data: listData, error, isFetching, isFetched, fetchData };
 };
