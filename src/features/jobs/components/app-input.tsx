@@ -12,7 +12,7 @@ export const AppInput = (props: Props) => {
     <div>
       <p>{label}</p>
       <input 
-        className={"border rounded-xxxl h-7 pl-2"}
+        className={"border rounded-2xl h-7 pl-2"}
         value={value} onChange={(e) => onChange(e.target.value)} 
         placeholder={placeholder}
       />

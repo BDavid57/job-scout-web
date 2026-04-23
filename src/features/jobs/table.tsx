@@ -1,19 +1,22 @@
 import moment from "moment";
-import { ArrowUpRight } from "lucide-react";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "../../components/ui/table.tsx";
-import { Button } from "../../components/ui/button.tsx";
 import type { Job } from "./types";
 import { truncateString } from "../../utils";
-import { memo } from "react";
+import { memo, useCallback, useState } from "react";
+import { DisplayJobModal } from "./components";
 
 type Props = {
   jobsList: Job[];
-  displayJob: () => void;
-  selectJob: (id: number) => void;
 }
 
 export const JobsTable = memo((props: Props) => {
-  const { jobsList, displayJob, selectJob } = props;
+  const { jobsList } = props;
+
+  const [triggerDisplayJob, setTriggerDisplayJob] = useState(false);
+  const [selectedJob, setSelectedJob] = useState<Job | undefined>(undefined);
+
+  const handleCloseDisplayJob = useCallback(() =>
+      setTriggerDisplayJob(false), []);
 
   return (
     <Table>
@@ -25,14 +28,14 @@ export const JobsTable = memo((props: Props) => {
           {<TableHead>Job Type</TableHead>}
           {<TableHead className={'max-lg:hidden'}>Max Salary</TableHead>}
           <TableHead className={'max-lg:hidden'}>Published</TableHead>
-          <TableHead className="max-w-[150px]"></TableHead>
         </TableRow>
       </TableHeader>
       <TableBody>
+        {triggerDisplayJob && <DisplayJobModal selectedJob={selectedJob} closeModal={handleCloseDisplayJob} />}
         {jobsList.map((item, index) => (
           <TableRow key={index} onClick={() => {
-            selectJob(item.id)
-            displayJob()
+            setSelectedJob(item)
+            setTriggerDisplayJob(true)
           }} className="cursor-pointer" >
             <TableCell>{truncateString(item.title, 35)}</TableCell>
             <TableCell className={'max-md:hidden'}>{item.company.name}</TableCell>
@@ -40,18 +43,6 @@ export const JobsTable = memo((props: Props) => {
             <TableCell>{item.types[0].name}</TableCell>
             <TableCell className={'max-lg:hidden text-muted-foreground'}>{item.salary_max}</TableCell>
             <TableCell className={'max-lg:hidden text-muted-foreground'}>{moment(item.published).format('ll')}</TableCell>
-            <TableCell className="truncate text-right">
-              <Button variant={'ghost'} size={'sm'}>
-                <a
-                  target={'_blank'}
-                  className={'text-xs'}
-                  href={`${item.application_url}`}
-                >
-                  Apply
-                  <ArrowUpRight className={'ml-1 w-4 h-4'} />
-                </a>
-              </Button>
-            </TableCell>
           </TableRow>
         ))}
       </TableBody>

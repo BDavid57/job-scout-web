@@ -19,8 +19,11 @@ export const DisplayJobModal = (props: Props) => {
       />
 
       <div className="relative z-10 w-full max-w-4xl rounded-2xl bg-white p-6 shadow-xl">
-        <div className="font-semibold mb-4">
-          {selectedJob.title}
+        <div className="flex justify-between">
+          <div className="font-semibold mb-4">
+            {selectedJob.title}
+          </div>
+          <Button className={"bg-red-500 text-white"} onClick={closeModal}>Close</Button>
         </div>
 
         <div className="font-semibold mb-4">
@@ -28,7 +31,18 @@ export const DisplayJobModal = (props: Props) => {
           <textarea className="w-full h-128">{selectedJob.description_string}</textarea>
         </div>
 
-        <Button onClick={closeModal}>Close</Button>
+        <div className="flex justify-between">
+          <Button className={'bg-blue-500 text-white'}>Save Job</Button>
+          <Button className={'bg-green-700'}>
+            <a
+              target={'_blank'}
+              className="text-white"
+              href={`${selectedJob.application_url}`}
+            >
+              Apply
+            </a>
+          </Button>
+        </div>
       </div>
     </div>
   );

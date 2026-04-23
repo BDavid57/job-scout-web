@@ -32,7 +32,7 @@ export const InputDashboard = memo((props: Props) => {
           label={"Days"}
         />
       </div>
-      <Button className={"border"} onClick={fetchData}>Fetch</Button>
+      <Button className={"bg-green-700 text-white mt-4"} onClick={fetchData}>Fetch Jobs</Button>
     </div>
   )
 })

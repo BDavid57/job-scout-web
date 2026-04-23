@@ -19,7 +19,7 @@ export const SelectRegion = (props: Props) => {
     <div>
       <p>Region</p>
       <select
-        className={"border rounded-xxxl h-7 px-2"}
+        className={"border rounded-2xl h-7 px-2"}
         value={region}
         onChange={(e) => {
           const regionId = Number(e.target.value);
