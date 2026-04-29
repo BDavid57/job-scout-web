@@ -2,8 +2,8 @@ import moment from "moment";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "../../components/ui/table.tsx";
 import type { Job } from "./types";
 import { truncateString } from "../../utils";
-import { memo, useCallback, useState } from "react";
-import { DisplayJobModal } from "./components";
+import { memo } from "react";
+import { Button } from "../../components/ui/button.tsx";
 
 type Props = {
   jobsList: Job[];
@@ -11,12 +11,6 @@ type Props = {
 
 export const JobsTable = memo((props: Props) => {
   const { jobsList } = props;
-
-  const [triggerDisplayJob, setTriggerDisplayJob] = useState(false);
-  const [selectedJob, setSelectedJob] = useState<Job | undefined>(undefined);
-
-  const handleCloseDisplayJob = useCallback(() =>
-      setTriggerDisplayJob(false), []);
 
   return (
     <Table>
@@ -28,21 +22,30 @@ export const JobsTable = memo((props: Props) => {
           {<TableHead>Job Type</TableHead>}
           {<TableHead className={'max-lg:hidden'}>Max Salary</TableHead>}
           <TableHead className={'max-lg:hidden'}>Published</TableHead>
+          <TableHead></TableHead>
         </TableRow>
       </TableHeader>
       <TableBody>
-        {triggerDisplayJob && <DisplayJobModal selectedJob={selectedJob} closeModal={handleCloseDisplayJob} />}
         {jobsList.map((item, index) => (
-          <TableRow key={index} onClick={() => {
-            setSelectedJob(item)
-            setTriggerDisplayJob(true)
-          }} className="cursor-pointer" >
+          <TableRow key={index} className="cursor-pointer" >
             <TableCell>{truncateString(item.title, 35)}</TableCell>
             <TableCell className={'max-md:hidden'}>{item.company.name}</TableCell>
             <TableCell>{truncateString(item.location, 30)}</TableCell>
             <TableCell>{item.types[0].name}</TableCell>
             <TableCell className={'max-lg:hidden text-muted-foreground'}>{item.salary_max}</TableCell>
             <TableCell className={'max-lg:hidden text-muted-foreground'}>{moment(item.published).format('ll')}</TableCell>
+            <TableCell>
+              <Button className={'bg-blue-500 text-white'}>Save</Button>
+              <Button className={'bg-green-700 ml-2'}>
+                <a
+                  target={'_blank'}
+                  className="text-white"
+                  href={`${item.application_url}`}
+                >
+                  Apply
+                </a>
+              </Button>
+            </TableCell>
           </TableRow>
         ))}
       </TableBody>
