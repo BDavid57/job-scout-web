@@ -3,13 +3,13 @@ import { jobApi } from "../../../../lib/api";
 import type { Job } from "../../types";
 
 export const useSaveJobMutation = () => {
-  const queryClient = useQueryClient();
+  const client = useQueryClient();
 
   const mutation = useMutation({
     mutationFn: (job: Job) => jobApi.saveJob(job),
 
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["saved-jobs"] });
+      client.invalidateQueries({ queryKey: ["saved-jobs"] });
     },
   });
 

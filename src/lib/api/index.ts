@@ -37,7 +37,6 @@ export const jobApi = {
   },
 
   getSavedJobs: async (): Promise<Job[]> => {
-
     const url = `${BASE_URL}/jobs/saved`;
 
     const data = await request<{ results: Job[] }>(url);
@@ -50,5 +49,13 @@ export const jobApi = {
       method: "POST",
       body: JSON.stringify(body),
     });
+  },
+
+  deleteJob: async (id: number) => {
+    await request<string>(`${BASE_URL}/jobs/${id}`, {
+      method: "DELETE",
+    });
+
+    Promise.resolve()
   },
 };

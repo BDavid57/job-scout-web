@@ -1,15 +1,23 @@
+import { memo } from "react";
 import { Button } from "../../../components/ui/button";
 import type { Job } from "../types";
 
 type Props = {
-  selectedJob: Job | undefined;
+  selectedJob: Job | null;
   closeModal: () => void;
+  confirmMethod: () => void;
+  message: string;
 };
 
-export const DisplayJobModal = (props: Props) => {
-  const { selectedJob, closeModal } = props;
+export const DisplayJobModal = memo((props: Props) => {
+  const { selectedJob, closeModal, confirmMethod, message } = props;
 
   if (!selectedJob) return null;
+
+  const handleConfirm = () => {
+    confirmMethod();
+    closeModal();
+  }
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center">
@@ -27,23 +35,13 @@ export const DisplayJobModal = (props: Props) => {
         </div>
 
         <div className="font-semibold mb-4">
-          <div className="font-bold">Description</div>
-          <textarea className="w-full h-128">{selectedJob.description_string}</textarea>
+          <div className="font-bold">{message}</div>
         </div>
 
         <div className="flex justify-between">
-          <Button className={'bg-blue-500 text-white'}>Save Job</Button>
-          <Button className={'bg-green-700'}>
-            <a
-              target={'_blank'}
-              className="text-white"
-              href={`${selectedJob.application_url}`}
-            >
-              Apply
-            </a>
-          </Button>
+          <Button onClick={handleConfirm} className={'bg-blue-500 text-white'}>Confirm</Button>
         </div>
       </div>
     </div>
   );
-};
+});

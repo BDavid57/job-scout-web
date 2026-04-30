@@ -1,10 +1,16 @@
-import { useMemo, useState } from "react";
+import { useMemo, useState, useEffect } from "react";
 
 export function usePagination<T>(data: T[] | undefined, itemsPerPage: number = 10) {
   const [currentPage, setCurrentPage] = useState(1);
   const listData = data ?? [];
 
   const lastPage = Math.max(1, Math.ceil(listData.length / itemsPerPage));
+
+  useEffect(() => {
+    if (currentPage > lastPage) {
+      setCurrentPage(lastPage);
+    }
+  }, [currentPage, lastPage]);
 
   const currentItems = useMemo(() => {
     const begin = (currentPage - 1) * itemsPerPage;
@@ -13,7 +19,7 @@ export function usePagination<T>(data: T[] | undefined, itemsPerPage: number = 1
     return listData.slice(begin, end);
   }, [listData, currentPage, itemsPerPage]);
 
-  const nextPageHandler = () => 
+  const nextPageHandler = () =>
     setCurrentPage((page) => Math.min(page + 1, lastPage));
 
   const previousPageHandler = () =>

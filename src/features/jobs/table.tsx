@@ -9,24 +9,33 @@ import { useSaveJobMutation } from "./hooks";
 type Props = {
   jobsList: Job[];
   savedList?: boolean;
+  triggerDeleteMethod?: () => void;
+  selectJob?: (id: number) => void;
 }
 
 export const JobsTable = memo((props: Props) => {
-  const [savingId, setSavingId] = useState<string | number | null>(null);
+  const { jobsList, savedList, triggerDeleteMethod, selectJob } = props;
 
-  const { jobsList, savedList } = props;
+  const [selectedJob, setSelectedJob] = useState<Job | null>(null);
 
   const { saveJob } = useSaveJobMutation();
 
   const handleSave = (job: Job) => {
-    setSavingId(job.id);
+    setSelectedJob(job);
 
     saveJob(job, {
       onSettled: () => {
-        setSavingId(null);
+        setSelectedJob(null);
       },
     });
   };
+
+  const handleDelete = (id: number) => {
+    if(triggerDeleteMethod && selectJob) {
+      triggerDeleteMethod()
+      selectJob(id)
+    }
+  }
 
   return (
     <Table>
@@ -52,11 +61,17 @@ export const JobsTable = memo((props: Props) => {
               {!savedList ?
                 <Button
                   onClick={() => handleSave(item)}
-                  disabled={savingId === item.id}
+                  disabled={selectedJob?.id === item.id}
                   className="bg-blue-200"
                 >
-                  {savingId === item.id ? "Saving..." : "Save"}
-                </Button> : <Button className="bg-red-200">Delete</Button>
+                  {selectedJob?.id === item.id ? "Saving..." : "Save"}
+                </Button> : 
+                <Button 
+                  onClick={() => handleDelete(item.id)}
+                  className="bg-red-200"
+                >
+                  Delete
+                </Button>
               }
               <Button className={'bg-green-200 ml-2'}>
                 <a
