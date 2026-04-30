@@ -25,22 +25,22 @@ export const JobsScreen = () => {
         onValueChange={onTabChange}
         className="w-full space-y-0"
       >
-        <Card>
-          <TabsList className="px-6 pt-6">
-            <TabsTrigger 
-              value={WidgetTabs.All}
-              className="px-8 py-4" 
-            >
-              All Jobs
-            </TabsTrigger>
-            <TabsTrigger 
-              value={WidgetTabs.Saved}
-              className="px-8 py-4" 
-            >
-              Saved Jobs
-            </TabsTrigger>
-          </TabsList>
+        <TabsList className="px-6 mb-2">
+          <TabsTrigger 
+            value={WidgetTabs.All}
+            className="px-8 py-4" 
+          >
+            All Jobs
+          </TabsTrigger>
+          <TabsTrigger 
+            value={WidgetTabs.Saved}
+            className="px-8 py-4" 
+          >
+            Saved Jobs
+          </TabsTrigger>
+        </TabsList>
 
+        <Card>
           <CardContent className="p-8">
             <TabsContent value={WidgetTabs.All}>
               <AllJobsComponent />
