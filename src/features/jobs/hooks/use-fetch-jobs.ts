@@ -36,7 +36,7 @@ export const useFetchJobs = (
       setIsFetching(true);
       setError(null);
 
-      const url = `${BASE_URL}?has_remote=true&language=en&region_id=${region}&title=${encodeURIComponent(
+      const url = `${BASE_URL}/jobs?has_remote=true&language=en&region_id=${region}&title=${encodeURIComponent(
         title
       )}&max_age=${published}`;
 
