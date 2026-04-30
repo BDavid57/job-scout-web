@@ -8,10 +8,11 @@ import { saveJob } from "../../lib/api";
 
 type Props = {
   jobsList: Job[];
+  savedList?: boolean;
 }
 
 export const JobsTable = memo((props: Props) => {
-  const { jobsList } = props;
+  const { jobsList, savedList } = props;
 
   return (
     <Table>
@@ -23,7 +24,7 @@ export const JobsTable = memo((props: Props) => {
           {<TableHead>Job Type</TableHead>}
           {<TableHead className={'max-lg:hidden'}>Max Salary</TableHead>}
           <TableHead className={'max-lg:hidden'}>Published</TableHead>
-          <TableHead></TableHead>
+          {!savedList && <TableHead></TableHead>}
         </TableRow>
       </TableHeader>
       <TableBody>
@@ -36,10 +37,10 @@ export const JobsTable = memo((props: Props) => {
             <TableCell className={'max-lg:hidden text-muted-foreground'}>{item.salary_max}</TableCell>
             <TableCell className={'max-lg:hidden text-muted-foreground'}>{moment(item.published).format('ll')}</TableCell>
             <TableCell>
-              <Button 
+              {!savedList && <Button 
                 onClick={() => saveJob(item)}
                 className={'bg-blue-500 text-white'}
-              >Save</Button>
+              >Save</Button>}
               <Button className={'bg-green-700 ml-2'}>
                 <a
                   target={'_blank'}

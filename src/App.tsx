@@ -1,11 +1,11 @@
 import { useState } from "react";
 import { Card, CardContent } from "./components/ui/card";
-import { JobsScreen} from "./features";
+import { JobsScreen, SavedJobsScreen} from "./features";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "./components/ui/tabs";
 import { ContainedScreen } from "./shared";
 
 const WidgetTabs = {
-  All: 'add',
+  All: 'all',
   Saved: 'saved',
 }
 
@@ -27,10 +27,16 @@ function App() {
       >
         <Card>
           <TabsList className="px-6 pt-6">
-            <TabsTrigger value={WidgetTabs.All}>
+            <TabsTrigger 
+              value={WidgetTabs.All}
+              className="px-8 py-4" 
+            >
               All Jobs
             </TabsTrigger>
-            <TabsTrigger value={WidgetTabs.Saved}>
+            <TabsTrigger 
+              value={WidgetTabs.Saved}
+              className="px-8 py-4" 
+            >
               Saved Jobs
             </TabsTrigger>
           </TabsList>
@@ -41,7 +47,7 @@ function App() {
             </TabsContent>
 
             <TabsContent value={WidgetTabs.Saved}>
-              <div>Saved Jobs</div>
+              <SavedJobsScreen />
             </TabsContent>
           </CardContent>
         </Card>
