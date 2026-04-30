@@ -1,6 +1,6 @@
 import { useMemo, useState } from "react";
 
-export function usePagination<T>(data: T[], itemsPerPage: number = 10) {
+export function usePagination<T>(data: T[] | undefined, itemsPerPage: number = 10) {
   const [currentPage, setCurrentPage] = useState(1);
   const listData = data ?? [];
 
